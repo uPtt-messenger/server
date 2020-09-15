@@ -1,4 +1,5 @@
-from util.src.log import Logger
+from backend_util.src.errorcode import ErrorCode
+from single_log.log import Logger
 
 if __name__ == '__main__':
     logger = Logger('demo logger', Logger.INFO)
@@ -11,3 +12,8 @@ if __name__ == '__main__':
         Logger.INFO,
         'show value',
         12)
+
+    logger.show_value(
+        Logger.INFO,
+        'Error code',
+        ErrorCode.Success)

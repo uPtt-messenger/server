@@ -8,12 +8,12 @@ if __name__ == '__main__':
         Logger.INFO,
         'demo log')
 
-    logger.show_value(
+    logger.show(
         Logger.INFO,
         'show value',
         12)
 
-    logger.show_value(
+    logger.show(
         Logger.INFO,
         'Error code',
         ErrorCode.Success)

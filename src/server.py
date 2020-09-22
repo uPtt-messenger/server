@@ -1,35 +1,100 @@
-from flask_socketio import Namespace, emit
-from flask import Flask, render_template
-from flask_socketio import SocketIO
-# https://flask-socketio.readthedocs.io/en/latest/
+import sys
+import time
+import threading
 
-from single_log.log import Logger
+from SingleLog.log import Logger
 
+from backend_util.src.console import Console
+from backend_util.src.config import Config
+from backend_util.src.event import EventConsole
+from backend_util.src.dynamic_data import DynamicData
+from backend_util.src.websocketserver import WsServer
+
+from command import Command
 import version
 
+logger = Logger('server', Logger.INFO)
+logger.show(Logger.INFO, 'uPtt server', version.v)
 
-class EchoNamespace(Namespace):
-    def on_connect(self):
-        pass
+logger.show(
+    Logger.INFO,
+    '初始化',
+    '啟動')
 
-    def on_disconnect(self):
-        pass
+config_obj = Config()
 
-    def on_my_event(self, data):
-        emit('my_response', data)
+console_obj = Console()
+console_obj.config = config_obj
 
-@socketio.on('my event', namespace='/test')
-def handle_my_custom_namespace_event(json):
-    print('received json: ' + str(json))
+logger.show(
+    Logger.INFO,
+    '執行模式',
+    console_obj.run_mode)
 
+event_console = EventConsole(console_obj)
+console_obj.event = event_console
 
-if __name__ == '__main__':
-    logger = Logger('main', Logger.INFO)
-    logger.show(Logger.INFO, 'uPtt server', version.v)
+dynamic_data_obj = DynamicData(console_obj)
+if not dynamic_data_obj.update_state:
+    logger.show(
+        Logger.INFO,
+        'Update dynamic data error')
+    sys.exit()
+console_obj.dynamic_data = dynamic_data_obj
 
-    app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'secret!'
-    socketio = SocketIO(app)
+comm_obj = Command(console_obj)
+console_obj.command = comm_obj
 
-    socketio.on_namespace(EchoNamespace('/echo'))
-    socketio.run(app, debug=True, host='127.0.0.1', port=5000)
+logger.show(
+    Logger.INFO,
+    '初始化',
+    '完成')
+
+run_server = True
+
+def event_close(p):
+    global run_server
+    run_server = False
+
+ws_server = WsServer(console_obj)
+
+event_console.register(
+    EventConsole.key_close,
+    ws_server.stop)
+
+event_console.register(
+    EventConsole.key_close,
+    event_close)
+
+ws_server.start()
+
+if ws_server.start_error:
+    logger.show(
+        Logger.INFO,
+        'websocket client-server startup error')
+    event_console.execute(EventConsole.key_close)
+else:
+
+    logger.show(
+        Logger.INFO,
+        '初始化',
+        '完成')
+
+    while run_server:
+        try:
+            time.sleep(0.5)
+        except KeyboardInterrupt:
+            event_console.execute(EventConsole.key_close)
+            break
+
+logger.show(
+    Logger.INFO,
+    '執行最終終止程序')
+
+running = threading.Event()
+running.set()
+running.clear()
+
+logger.show(
+    Logger.INFO,
+    '最終終止程序全數完成')

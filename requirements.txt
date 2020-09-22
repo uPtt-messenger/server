@@ -1,3 +1,4 @@
 single_log
 flask-socketio
 pyptt
+eventlet

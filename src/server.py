@@ -18,6 +18,10 @@ class EchoNamespace(Namespace):
     def on_my_event(self, data):
         emit('my_response', data)
 
+@socketio.on('my event', namespace='/test')
+def handle_my_custom_namespace_event(json):
+    print('received json: ' + str(json))
+
 
 if __name__ == '__main__':
     logger = Logger('main', Logger.INFO)
@@ -28,3 +32,4 @@ if __name__ == '__main__':
     socketio = SocketIO(app)
 
     socketio.on_namespace(EchoNamespace('/echo'))
+    socketio.run(app, debug=True, host='127.0.0.1', port=5000)

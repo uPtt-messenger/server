@@ -1,0 +1,3 @@
+single_log
+flask-socketio
+pyptt

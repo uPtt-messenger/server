@@ -37,6 +37,8 @@ class Command:
 
     def analyze(self, recv_msg: Msg):
 
+        self.logger.show(Logger.INFO, '訊息', recv_msg)
+
         opt = recv_msg.get(Msg.key_opt)
         if opt == 'echo':
             current_res_msg = Msg(

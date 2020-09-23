@@ -10,7 +10,7 @@ from backend_util.src.event import EventConsole
 from backend_util.src.dynamic_data import DynamicData
 from backend_util.src.websocketserver import WsServer
 
-from command import Command
+from server_command import Command
 import version
 
 logger = Logger('server', Logger.INFO)
@@ -25,6 +25,7 @@ config_obj = Config()
 
 console_obj = Console()
 console_obj.config = config_obj
+console_obj.role = Console.role_server
 
 logger.show(
     Logger.INFO,
@@ -52,9 +53,11 @@ logger.show(
 
 run_server = True
 
+
 def event_close(p):
     global run_server
     run_server = False
+
 
 ws_server = WsServer(console_obj)
 

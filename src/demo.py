@@ -1,5 +1,5 @@
 from backend_util.src.errorcode import ErrorCode
-from single_log.log import Logger
+from SingleLog.log import Logger
 
 if __name__ == '__main__':
     logger = Logger('demo logger', Logger.INFO)

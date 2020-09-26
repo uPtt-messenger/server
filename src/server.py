@@ -9,8 +9,8 @@ from backend_util.src.config import Config
 from backend_util.src.event import EventConsole
 from backend_util.src.dynamic_data import DynamicData
 from backend_util.src.websocketserver import WsServer
+from backend_util.src.command import Command
 
-from server_command import Command
 import version
 
 logger = Logger('server', Logger.INFO)
@@ -20,12 +20,11 @@ logger.show(
     Logger.INFO,
     '初始化',
     '啟動')
-
-config_obj = Config()
-
 console_obj = Console()
-console_obj.config = config_obj
 console_obj.role = Console.role_server
+
+config_obj = Config(console_obj)
+console_obj.config = config_obj
 
 logger.show(
     Logger.INFO,

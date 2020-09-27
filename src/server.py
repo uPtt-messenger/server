@@ -6,10 +6,13 @@ from SingleLog.log import Logger
 
 from backend_util.src.console import Console
 from backend_util.src.config import Config
+from backend_util.src import config
 from backend_util.src.event import EventConsole
 from backend_util.src.dynamic_data import DynamicData
 from backend_util.src.websocketserver import WsServer
 from backend_util.src.command import Command
+from backend_util.src.data import DictData
+from backend_util.src.pttadapter import PTTAdapter
 
 import version
 
@@ -20,6 +23,9 @@ logger.show(
     Logger.INFO,
     '初始化',
     '啟動')
+
+config.log_level = Logger.INFO
+
 console_obj = Console()
 console_obj.role = Console.role_server
 
@@ -34,6 +40,12 @@ logger.show(
 event_console = EventConsole(console_obj)
 console_obj.event = event_console
 
+ptt_adapter = PTTAdapter(console_obj)
+console_obj.ptt_adapter = ptt_adapter
+
+console_obj.token_list = DictData(console_obj, '.', 'token')
+console_obj.token_list.load()
+
 dynamic_data_obj = DynamicData(console_obj)
 if not dynamic_data_obj.update_state:
     logger.show(
@@ -42,7 +54,7 @@ if not dynamic_data_obj.update_state:
     sys.exit()
 console_obj.dynamic_data = dynamic_data_obj
 
-comm_obj = Command(console_obj)
+comm_obj = Command(console_obj, False)
 console_obj.command = comm_obj
 
 logger.show(
@@ -58,7 +70,7 @@ def event_close(p):
     run_server = False
 
 
-ws_server = WsServer(console_obj)
+ws_server = WsServer(console_obj, False)
 
 event_console.register(
     EventConsole.key_close,

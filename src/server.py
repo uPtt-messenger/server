@@ -16,99 +16,101 @@ from backend_util.src.pttadapter import PTTAdapter
 
 import version
 
-logger = Logger('server', Logger.INFO)
-logger.show(Logger.INFO, 'uPtt server', version.v)
+if __name__ == '__main__':
 
-logger.show(
-    Logger.INFO,
-    '初始化',
-    '啟動')
+    logger = Logger('server', Logger.INFO)
+    logger.show(Logger.INFO, 'uPtt server', version.v)
 
-config.log_level = Logger.INFO
-
-console_obj = Console()
-console_obj.role = Console.role_server
-
-config_obj = Config(console_obj)
-console_obj.config = config_obj
-
-logger.show(
-    Logger.INFO,
-    '執行模式',
-    console_obj.run_mode)
-
-event_console = EventConsole(console_obj)
-console_obj.event = event_console
-
-ptt_adapter = PTTAdapter(console_obj)
-console_obj.ptt_adapter = ptt_adapter
-
-console_obj.token_list = DictData(console_obj, '.', 'token')
-console_obj.token_list.load()
-
-dynamic_data_obj = DynamicData(console_obj)
-if not dynamic_data_obj.update_state:
     logger.show(
         Logger.INFO,
-        'Update dynamic data error')
-    sys.exit()
-console_obj.dynamic_data = dynamic_data_obj
+        '初始化',
+        '啟動')
 
-comm_obj = Command(console_obj, False)
-console_obj.command = comm_obj
+    config.log_level = Logger.INFO
 
-logger.show(
-    Logger.INFO,
-    '初始化',
-    '完成')
+    console_obj = Console()
+    console_obj.role = Console.role_server
 
-run_server = True
+    config_obj = Config(console_obj)
+    console_obj.config = config_obj
 
-
-def event_close(p):
-    global run_server
-    run_server = False
-
-
-ws_server = WsServer(console_obj, False)
-
-event_console.register(
-    EventConsole.key_close,
-    ws_server.stop)
-
-event_console.register(
-    EventConsole.key_close,
-    event_close)
-
-ws_server.start()
-
-if ws_server.start_error:
     logger.show(
         Logger.INFO,
-        'websocket client-server startup error')
-    event_console.execute(EventConsole.key_close)
-else:
+        '執行模式',
+        console_obj.run_mode)
+
+    event_console = EventConsole(console_obj)
+    console_obj.event = event_console
+
+    ptt_adapter = PTTAdapter(console_obj)
+    console_obj.ptt_adapter = ptt_adapter
+
+    console_obj.token_list = DictData(console_obj, '.', 'token')
+    console_obj.token_list.load()
+
+    dynamic_data_obj = DynamicData(console_obj)
+    if not dynamic_data_obj.update_state:
+        logger.show(
+            Logger.INFO,
+            'Update dynamic data error')
+        sys.exit()
+    console_obj.dynamic_data = dynamic_data_obj
+
+    comm_obj = Command(console_obj, False)
+    console_obj.command = comm_obj
 
     logger.show(
         Logger.INFO,
         '初始化',
         '完成')
 
-    while run_server:
-        try:
-            time.sleep(0.5)
-        except KeyboardInterrupt:
-            event_console.execute(EventConsole.key_close)
-            break
+    run_server = True
 
-logger.show(
-    Logger.INFO,
-    '執行最終終止程序')
 
-running = threading.Event()
-running.set()
-running.clear()
+    def event_close(p):
+        global run_server
+        run_server = False
 
-logger.show(
-    Logger.INFO,
-    '最終終止程序全數完成')
+
+    ws_server = WsServer(console_obj, False)
+
+    event_console.register(
+        EventConsole.key_close,
+        ws_server.stop)
+
+    event_console.register(
+        EventConsole.key_close,
+        event_close)
+
+    ws_server.start()
+
+    if ws_server.start_error:
+        logger.show(
+            Logger.INFO,
+            'websocket client-server startup error')
+        event_console.execute(EventConsole.key_close)
+    else:
+
+        logger.show(
+            Logger.INFO,
+            '初始化',
+            '完成')
+
+        while run_server:
+            try:
+                time.sleep(0.5)
+            except KeyboardInterrupt:
+                event_console.execute(EventConsole.key_close)
+                break
+
+    logger.show(
+        Logger.INFO,
+        '執行最終終止程序')
+
+    running = threading.Event()
+    running.set()
+    running.clear()
+
+    logger.show(
+        Logger.INFO,
+        '最終終止程序全數完成')

@@ -1,3 +1,4 @@
 SingleLog
 websockets
 pyptt
+PyCryptodome

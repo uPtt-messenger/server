@@ -48,6 +48,9 @@ if __name__ == '__main__':
     console_obj.token_list = DictData(console_obj, '.', 'token')
     console_obj.token_list.load()
 
+    console_obj.public_key_list = DictData(console_obj, '.', 'public_key')
+    console_obj.public_key_list.load()
+
     dynamic_data_obj = DynamicData(console_obj)
     if not dynamic_data_obj.update_state:
         logger.show(

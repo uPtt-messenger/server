@@ -4,6 +4,8 @@ import threading
 
 from SingleLog.log import Logger
 
+sys.path.append('../../')
+
 from backend_util.src.console import Console
 from backend_util.src.config import Config
 from backend_util.src import config

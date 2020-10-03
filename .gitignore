@@ -1,5 +1,4 @@
 __pycache__/
-/src/system_config.json
-/src/SystemConfig.json
-/src/token.json
-/src/public_key.json
+/token.json
+/public_key.json
+/config.json

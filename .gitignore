@@ -1,4 +1,4 @@
 __pycache__/
-/token.json
-/public_key.json
-/config.json
+*/config.json
+*/public_key.json
+*/token.json

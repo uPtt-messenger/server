@@ -47,15 +47,15 @@ if __name__ == '__main__':
     ptt_adapter = PTTAdapter(console_obj)
     console_obj.ptt_adapter = ptt_adapter
 
-    console_obj.token_list = DictData(console_obj, 'token', '.')
+    console_obj.token_list = DictData(console_obj, 'token', '../server_data')
     console_obj.token_list.load()
 
-    console_obj.public_key_list = DictData(console_obj, 'public_key', '.')
+    console_obj.public_key_list = DictData(console_obj, 'public_key', '../server_data')
     console_obj.public_key_list.load()
 
     console_obj.connect_list = DictData(console_obj, 'connect_list', None)
     console_obj.connect_time = DictData(console_obj, 'connect_time', None)
-    console_obj.max_online = DictData(console_obj, 'max_online', '.')
+    console_obj.max_online = DictData(console_obj, 'max_online', '../server_data')
 
     dynamic_data_obj = DynamicData(console_obj)
     if not dynamic_data_obj.update_state:

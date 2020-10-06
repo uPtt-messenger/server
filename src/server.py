@@ -54,6 +54,8 @@ if __name__ == '__main__':
     console_obj.public_key_list.load()
 
     console_obj.connect_list = DictData(console_obj, 'connect_list', None)
+    console_obj.connect_time = DictData(console_obj, 'connect_time', None)
+    console_obj.record = DictData(console_obj, 'record', '.')
 
     dynamic_data_obj = DynamicData(console_obj)
     if not dynamic_data_obj.update_state:

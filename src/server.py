@@ -8,6 +8,7 @@ sys.path.append('../')
 
 from backend_util.src.console import Console
 from backend_util.src.config import Config
+from backend_util.src.process import Process
 from backend_util.src import config
 from backend_util.src.event import EventConsole
 from backend_util.src.dynamic_data import DynamicData
@@ -46,6 +47,8 @@ if __name__ == '__main__':
 
     ptt_adapter = PTTAdapter(console_obj)
     console_obj.ptt_adapter = ptt_adapter
+
+    process_obj = Process(console_obj)
 
     console_obj.token_list = DictData(console_obj, 'token', '../server_data')
     console_obj.token_list.load()

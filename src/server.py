@@ -56,6 +56,7 @@ if __name__ == '__main__':
     console_obj.connect_list = DictData(console_obj, 'connect_list', None)
     console_obj.connect_time = DictData(console_obj, 'connect_time', None)
     console_obj.max_online = DictData(console_obj, 'max_online', '../server_data')
+    console_obj.max_online.load()
 
     dynamic_data_obj = DynamicData(console_obj)
     if not dynamic_data_obj.update_state:
